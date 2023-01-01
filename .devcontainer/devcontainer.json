@@ -1,0 +1,29 @@
+{
+  "name": "toggl_data_analyzer",
+  "remoteUser": "toggl_data_analyzer_user",
+  "dockerComposeFile": "../docker-compose.dev.yaml",
+  "service": "app",
+  "workspaceFolder": "/workspaces",
+  "overrideCommand": true,
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "eamodio.gitlens",
+        "esbenp.prettier-vscode",
+        "hbenl.vscode-test-explorer",
+        "irongeek.vscode-env",
+        "matklad.rust-analyzer",
+        "mhutchie.git-graph",
+        "ms-azuretools.vscode-docker",
+        "mutantdino.resourcemonitor",
+        "rust-lang.rust-analyzer",
+        "serayuzgur.crates",
+        "streetsidesoftware.code-spell-checker",
+        "swellaby.vscode-rust-test-adapter",
+        "tamasfe.even-better-toml",
+        "vadimcn.vscode-lldb"
+      ],
+      "settings": {}
+    }
+  }
+}

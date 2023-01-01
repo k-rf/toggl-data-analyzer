@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./.devcontainer/Dockerfile.dev
+      args:
+        - REMOTE_USER=${REMOTE_USER}
+        - REMOTE_WORKSPACES=${REMOTE_WORKSPACES}
+        - REMOTE_HOME=${REMOTE_HOME}
+    container_name: ${CONTAINER_NAME}
+    working_dir: ${REMOTE_WORKSPACES}
+    user: ${REMOTE_USER}
+    tty: true
+    volumes:
+      - type: bind
+        source: .
+        target: ${PROJECT_ROOT}
+      - type: volume
+        source: bash_history
+        target: /commandhistory
+      - type: volume
+        source: vscode_extensions
+        target: ${REMOTE_HOME}/.vscode-server/extensions
+      - type: volume
+        source: cargo
+        target: ${REMOTE_HOME}/.cargo
+      - type: volume
+        source: cargo_registry
+        target: /usr/local/cargo/registry
+      - type: volume
+        source: rustup
+        target: /usr/local/rustup
+
+networks:
+  default:
+    name: ${NETWORK_NAME}
+    external: true
+
+volumes:
+  bash_history:
+    name: ${BASH_HISTORY_VOLUME_NAME}
+  vscode_extensions:
+    name: ${VSCODE_EXTENSIONS_VOLUME_NAME}
+  cargo:
+    name: ${CARGO_VOLUME_NAME}
+  cargo_registry:
+    name: ${CARGO_REGISTRY_VOLUME_NAME}
+  rustup:
+    name: ${RUSTUP_VOLUME_NAME}

@@ -1,0 +1,15 @@
+{
+  "version": "0.2",
+  "gitignoreRoot": ["."],
+  "ignorePaths": ["devcontainer.json"],
+  "words": [
+    "clippy",
+    "commandhistory",
+    "devcontainer",
+    "HISTFILE",
+    "noninteractive",
+    "rustfmt",
+    "rustup",
+    "toggl"
+  ]
+}

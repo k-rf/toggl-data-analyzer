@@ -1,0 +1,53 @@
+FROM rust:1.66-bullseye
+
+ARG REMOTE_USER
+ARG REMOTE_WORKSPACES
+ARG REMOTE_HOME
+
+# Platform Configuration
+# ------------------------------------------------------------------------------
+
+USER root
+
+RUN useradd -m ${REMOTE_USER} -u 1000 -s /bin/bash
+
+RUN apt-get update \
+  && export DEBIAN_FRONTEND=noninteractive \
+  && apt-get -y install --no-install-recommends sudo git curl tree musl-tools \
+  && rustup target add x86_64-unknown-linux-musl
+
+RUN cargo install cargo-watch \
+  && rustup component add clippy rustfmt
+
+RUN mkdir /commandhistory \
+  && chown -R ${REMOTE_USER}:${REMOTE_USER} /commandhistory \
+  && touch /commandhistory/.bash_history \
+  && echo "export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" >> ${REMOTE_HOME}/.bashrc \
+  #
+  && mkdir -p \
+  ${REMOTE_HOME}/.vscode-server/extensions \
+  ${REMOTE_HOME}/.cargo /usr/local/rustup \
+  /usr/local/cargo/registry \
+  #
+  && chown -R ${REMOTE_USER}:${REMOTE_USER} \
+  ${REMOTE_HOME}/.vscode-server \
+  ${REMOTE_HOME}/.vscode-server/extensions \
+  ${REMOTE_HOME}/.cargo \
+  /usr/local/rustup \
+  /usr/local/cargo/registry
+
+# Usability Configuration
+# ------------------------------------------------------------------------------
+
+RUN sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- --yes \
+  && echo 'eval "$(starship init bash)"' >> ${REMOTE_HOME}/.bashrc
+
+USER ${REMOTE_USER}
+WORKDIR ${REMOTE_HOME}
+RUN { \
+  echo ''; \
+  echo '# Alias'; \
+  echo 'alias ll="ls -l"'; \
+  echo 'alias la="ls -a"'; \
+  echo 'alias lla="ls -l -a"'; \
+  } >> ${REMOTE_HOME}/.bashrc
