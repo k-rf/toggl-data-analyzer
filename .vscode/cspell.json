@@ -6,6 +6,7 @@
     "clippy",
     "commandhistory",
     "devcontainer",
+    "groupby",
     "HISTFILE",
     "noninteractive",
     "rustfmt",
