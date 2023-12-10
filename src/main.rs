@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::{env, path::Path};
 
+use polars::lazy::dsl::{Expr, GetOutput};
 use polars::{export::num::integer::div_mod_floor, prelude::*};
 
 fn main() -> Result<(), PolarsError> {
@@ -36,6 +37,7 @@ fn create_data_frame(frame: LazyFrame) -> DataFrame {
             col("Duration").sum(),
             col("Duration").alias("Seconds").sum(),
         ])
+        .with_column(Expr::Literal(LiteralValue::Int32(2022)).alias("Annual"))
         .sort(
             "Duration",
             SortOptions {
@@ -43,11 +45,16 @@ fn create_data_frame(frame: LazyFrame) -> DataFrame {
                 nulls_last: (true),
             },
         )
+        .select([
+            col("Annual").alias("年度"),
+            col("Client").alias("名前"),
+            col("Duration")
+                .alias("hms")
+                .map(|duration| Ok(to_hms(&duration)), GetOutput::default()),
+            col("Client").alias("ID"),
+        ])
         .collect()
         .unwrap()
-        .apply("Duration", to_hms)
-        .unwrap()
-        .clone()
 }
 
 /// \[h\]:mm:ss 形式の文字列を秒 (i32) に変換する

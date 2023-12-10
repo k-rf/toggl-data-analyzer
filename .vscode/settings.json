@@ -2,6 +2,6 @@
   "editor.defaultFormatter": "rust-lang.rust-analyzer",
   "editor.formatOnSaveMode": "file",
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
+    "source.fixAll": "explicit"
   }
 }
